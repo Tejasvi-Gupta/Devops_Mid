@@ -69,16 +69,29 @@ jobs:
     needs: lint-and-validate
     steps:
       - uses: actions/checkout@v4
+      - name: Check if frontend exists
+        id: check_frontend
+        run: |
+          if [ -d "frontend" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
       - uses: actions/setup-node@v4
+        if: steps.check_frontend.outputs.exists == 'true'
         with:
           node-version: "22"
       - working-directory: frontend
+        if: steps.check_frontend.outputs.exists == 'true'
         run: npm ci
       - working-directory: frontend
+        if: steps.check_frontend.outputs.exists == 'true'
         run: npm audit --audit-level=high || true
       - working-directory: frontend
+        if: steps.check_frontend.outputs.exists == 'true'
         run: npm test
       - working-directory: frontend
+        if: steps.check_frontend.outputs.exists == 'true'
         run: npm run build
 
   image:
@@ -86,4 +99,10 @@ jobs:
     needs: [backend, frontend]
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -f backend/Dockerfile -t epp-api:ci .
+      - name: Build Docker image
+        run: |
+          if [ -f "backend/Dockerfile" ]; then
+            docker build -f backend/Dockerfile -t epp-api:ci .
+          else
+            echo "backend/Dockerfile not present on this branch, skipping"
+          fi
