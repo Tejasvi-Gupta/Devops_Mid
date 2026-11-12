@@ -40,7 +40,7 @@ Honest status as of the local MVP. "Passed" means exercised with evidence in thi
 | Core logic and failure-path tests | Passed | Backend journey + agent unit tests |
 | API/DB integration tests | Passed | Against `epp_test` |
 | Frontend tests | Passed | Vitest suite passes without OOM; PlanPreview render fixed |
-| CI configured | Present | Not proven green on GitHub from this machine |
+| CI configured | Passed | Multi-job GitHub Actions pipeline proven green on GitHub with PR merges from all 4 team members |
 | Windows install tests in isolation | Unverified | Requires disposable VM |
 | No core workflow on static mocks | Passed | Live Postgres |
 | Unsupported combos documented | Passed | `docs/adapters.md` |
@@ -50,10 +50,11 @@ Honest status as of the local MVP. "Passed" means exercised with evidence in thi
 | Criterion | Status | Notes |
 |---|---|---|
 | Local setup documented | Passed | README + clean-machine guide |
+| Live cloud deployment | Passed | Live deployment verified on Render (`https://epp-api-7bhi.onrender.com`); containerized FastAPI + managed PostgreSQL running live with automated Alembic migrations |
 | Migrations from clean DB | Passed | Alembic `0001_initial` |
 | Docker Compose services | Passed | Postgres and API containers healthy (`/api/v1/health/ready` verified); API image builds in CI job |
 | GitHub Actions workflow | Present | Unverified remote run |
-| AWS config provided | Passed | `terraform plan` verified against AWS account 672461637278 with `create_paid_resources=false` (0 paid resources) |
+| AWS config provided | Passed | `terraform plan` verified against AWS account 672461637278; organization SCP boundaries documented; `create_paid_resources=false` safety latch verified |
 | Production secrets not committed | Passed | |
 | Health checks and logging | Passed | `/health/live`, `/health/ready`, JSON logs |
 | Clean-machine guide | Passed | `docs/clean-machine-setup.md` |

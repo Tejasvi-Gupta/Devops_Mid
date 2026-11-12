@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+
 let accessToken = null
 
 function cookie(name) {
@@ -11,7 +13,7 @@ export function setAccessToken(token) {
 
 export async function refreshSession() {
   const csrf = cookie('epp_csrf')
-  const response = await fetch('/api/v1/auth/refresh', {
+  const response = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
     method: 'POST',
     credentials: 'include',
     headers: csrf ? { 'X-CSRF-Token': csrf } : {},
@@ -30,7 +32,7 @@ export async function api(path, options = {}) {
     const headers = { ...(options.headers || {}) }
     if (options.body) headers['Content-Type'] = 'application/json'
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`
-    return fetch(`/api/v1${path}`, { ...options, headers, credentials: 'include' })
+    return fetch(`${API_BASE}/api/v1${path}`, { ...options, headers, credentials: 'include' })
   }
   let response = await send()
   if (response.status === 401 && !options.skipRefresh) {
