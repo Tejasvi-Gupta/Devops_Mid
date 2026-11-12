@@ -1,0 +1,40 @@
+name: Deploy AWS
+
+# Manual only. Requires repository secrets and an explicit human run.
+# This workflow does not create infrastructure by itself; it builds and can
+# push an image after AWS credentials and an ECR repository exist.
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Image tag to push
+        required: true
+        default: latest
+      push_image:
+        description: Push to ECR (true/false)
+        required: true
+        default: "false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f backend/Dockerfile -t epp-api:${{ inputs.image_tag }} .
+      - name: Optional ECR push
+        if: inputs.push_image == 'true'
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        run: |
+          if [ -z "$ECR_REPOSITORY" ]; then
+            echo "ECR_REPOSITORY secret is not set. Skipping push."
+            exit 1
+          fi
+          aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$ECR_REPOSITORY"
+          docker tag epp-api:${{ inputs.image_tag }} "$ECR_REPOSITORY:${{ inputs.image_tag }}"
+          docker push "$ECR_REPOSITORY:${{ inputs.image_tag }}"
