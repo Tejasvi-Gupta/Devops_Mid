@@ -1,0 +1,12 @@
+aws_region            = "us-east-1"
+project_name          = "epp"
+environment           = "staging"
+frontend_bucket_name  = "your-unique-epp-frontend-bucket"
+db_username           = "epp_admin"
+db_password           = "replace-with-a-long-random-password"
+app_secret_key        = "replace-with-a-random-string-of-at-least-32-characters"
+container_image       = ""
+desired_count         = 1
+
+# Keep false until a human explicitly approves AWS spend.
+create_paid_resources = false
