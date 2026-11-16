@@ -39,7 +39,7 @@ export function Shell({ children }) {
   const { user, logout } = useAuth()
   const links = user?.role === 'admin'
     ? [['/admin', 'Admin'], ['/notifications', 'Notifications'], ['/account', 'Account']]
-    : user?.role === 'instructor' && user.instructor_status === 'approved'
+    : user?.role === 'instructor'
       ? [['/instructor', 'Courses'], ['/notifications', 'Notifications'], ['/account', 'Account']]
       : [['/student', 'Environments'], ['/student/device', 'Device'], ['/notifications', 'Notifications'], ['/account', 'Account']]
   return (

@@ -7,8 +7,7 @@ export function homeFor(user) {
   if (!user) return '/login'
   if (user.account_status !== 'active') return '/access-denied'
   if (user.role === 'admin') return '/admin'
-  if (user.role === 'instructor' && user.instructor_status === 'approved') return '/instructor'
-  if (user.role === 'instructor') return '/account'
+  if (user.role === 'instructor') return '/instructor'
   return '/student'
 }
 

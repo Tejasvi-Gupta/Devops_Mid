@@ -31,8 +31,8 @@ def current_user(
 
 
 def current_instructor(user: User = Depends(current_user)) -> User:
-    if user.role != "instructor" or user.instructor_status != "approved":
-        raise forbidden("Approved instructor access is required")
+    if user.role != "instructor":
+        raise forbidden("Instructor access is required")
     return user
 
 

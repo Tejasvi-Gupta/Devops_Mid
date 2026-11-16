@@ -26,9 +26,9 @@ export default function App() {
         <Route path="/student/device" element={<Guard allow={(user) => user.role === 'student'}><DevicePage /></Guard>} />
         <Route path="/student/environments/:id" element={<Guard allow={(user) => user.role === 'student'}><StudentEnvironment /></Guard>} />
         <Route path="/student/jobs/:id" element={<Guard allow={(user) => user.role === 'student'}><JobPage /></Guard>} />
-        <Route path="/instructor" element={<Guard allow={(user) => user.role === 'instructor' && user.instructor_status === 'approved'}><InstructorHome /></Guard>} />
-        <Route path="/instructor/courses/:id" element={<Guard allow={(user) => user.role === 'instructor' && user.instructor_status === 'approved'}><InstructorCourse /></Guard>} />
-        <Route path="/instructor/environments/:id" element={<Guard allow={(user) => user.role === 'instructor' && user.instructor_status === 'approved'}><InstructorEnvironment /></Guard>} />
+        <Route path="/instructor" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorHome /></Guard>} />
+        <Route path="/instructor/courses/:id" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorCourse /></Guard>} />
+        <Route path="/instructor/environments/:id" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorEnvironment /></Guard>} />
         <Route path="/admin" element={<Guard allow={(user) => user.role === 'admin'}><AdminHome /></Guard>} />
         <Route path="*" element={<Navigate to={user ? homeFor(user) : '/login'} replace />} />
       </Routes>
