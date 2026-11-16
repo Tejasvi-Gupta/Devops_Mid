@@ -69,6 +69,15 @@ def get_course(course_id: uuid.UUID, user: User = Depends(current_user), db: Ses
     return course_service.get_course(db, user, course_id)
 
 
+@router.delete("/courses/{course_id}", status_code=204)
+def delete_course(
+    course_id: uuid.UUID,
+    user: User = Depends(current_instructor),
+    db: Session = Depends(get_db),
+):
+    course_service.delete_course(db, user, course_id)
+
+
 @router.post("/courses/{course_id}/enrollments", response_model=EnrollmentOut, status_code=201)
 def enroll(
     course_id: uuid.UUID,

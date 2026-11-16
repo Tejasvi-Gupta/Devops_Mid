@@ -280,7 +280,31 @@ export function InstructorHome() {
         {error && <p>{error}</p>}
         {!data && <p>Loading courses…</p>}
         {data && !data.length && <p>No courses yet.</p>}
-        <ul>{data?.map((course) => <li key={course.id} className="py-2"><Link to={`/instructor/courses/${course.id}`}>{course.name} · {course.class_code}</Link></li>)}</ul>
+        <ul className="divide-y divide-stone-200 dark:divide-zinc-800">
+          {data?.map((course) => (
+            <li key={course.id} className="flex items-center justify-between py-2.5">
+              <Link to={`/instructor/courses/${course.id}`} className="font-medium hover:underline">
+                {course.name} · {course.class_code}
+              </Link>
+              <button
+                type="button"
+                className="rounded border border-red-300 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+                onClick={async () => {
+                  if (window.confirm(`Are you sure you want to delete the course "${course.name}"?`)) {
+                    try {
+                      await api(`/courses/${course.id}`, { method: 'DELETE' })
+                      reload()
+                    } catch (err) {
+                      setMessage(err.message)
+                    }
+                  }
+                }}
+              >
+                Delete course
+              </button>
+            </li>
+          ))}
+        </ul>
       </Panel>
     </div>
   )
@@ -288,6 +312,7 @@ export function InstructorHome() {
 
 export function InstructorCourse() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [course, setCourse] = useState(null)
   const [environments, setEnvironments] = useState([])
   const [roster, setRoster] = useState([])
@@ -303,7 +328,27 @@ export function InstructorCourse() {
   if (!course) return <p>{message || 'Loading course…'}</p>
   return (
     <div className="space-y-6">
-      <Panel title={`${course.name} · ${course.class_code}`}>
+      <Panel
+        title={`${course.name} · ${course.class_code}`}
+        action={
+          <button
+            type="button"
+            className="rounded border border-red-300 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+            onClick={async () => {
+              if (window.confirm(`Delete course "${course.name}" and return to courses?`)) {
+                try {
+                  await api(`/courses/${id}`, { method: 'DELETE' })
+                  navigate('/instructor')
+                } catch (err) {
+                  setMessage(err.message)
+                }
+              }
+            }}
+          >
+            Delete course
+          </button>
+        }
+      >
         <form className="flex gap-2" onSubmit={async (event) => {
           event.preventDefault()
           const email = new FormData(event.target).get('email')

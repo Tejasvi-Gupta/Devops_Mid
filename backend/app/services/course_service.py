@@ -181,3 +181,20 @@ def remove_enrollment(db: Session, user: User, course_id: uuid.UUID, enrollment_
         outcome="success",
     )
     db.commit()
+
+
+def delete_course(db: Session, user: User, course_id: uuid.UUID) -> None:
+    course = course_by_id(db, course_id)
+    if not course:
+        raise not_found("Course not found")
+    _require_owner(course, user)
+    audit(
+        db,
+        actor_id=user.id,
+        action="course.delete",
+        target_type="course",
+        target_id=str(course.id),
+        outcome="success",
+    )
+    db.delete(course)
+    db.commit()
