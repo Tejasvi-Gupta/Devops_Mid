@@ -162,8 +162,35 @@ export function DevicePage() {
         <button className="rounded bg-pine px-3 py-2 text-white" type="button" onClick={() => createCode(false)}>Create pairing code</button>
         <button className="rounded border px-3 py-2" type="button" onClick={() => createCode(true)}>Replace device</button>
       </div>
-      {code && <p className="mt-4 font-mono text-2xl">{code}</p>}
-      {code && <p className="mt-2 text-sm">Enter this code in the agent within five minutes. It works once.</p>}
+      {code && (
+        <div className="mt-4 rounded-lg border border-pine-300 bg-emerald-50/50 p-5 dark:border-zinc-700 dark:bg-zinc-950">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-pine">Pairing Code</span>
+              <p className="font-mono text-3xl font-extrabold tracking-widest text-pine">{code}</p>
+            </div>
+            <a
+              href="https://github.com/Tejasvi-Gupta/Devops_Mid/releases/latest/download/epp-agent.exe"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded bg-pine px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90"
+            >
+              ⬇ Download Agent App (.exe)
+            </a>
+          </div>
+          <p className="mt-2 text-xs text-stone-500">Code expires in 5 minutes · Single-use</p>
+
+          <div className="mt-4 rounded border border-stone-200 bg-white p-3 text-xs dark:border-zinc-800 dark:bg-zinc-900">
+            <p className="font-medium text-stone-800 dark:text-stone-200">How to use (No coding or cloning required):</p>
+            <ol className="mt-1.5 list-inside list-decimal space-y-1 text-stone-600 dark:text-stone-300">
+              <li>Click <strong>Download Agent App</strong> to get <code>epp-agent.exe</code>.</li>
+              <li>Double-click <code>epp-agent.exe</code> to open the desktop window.</li>
+              <li>Enter your code <strong>{code}</strong> and click <strong>Pair Device</strong>.</li>
+              <li>Click <strong>Start Agent Polling</strong> — you're done!</li>
+            </ol>
+          </div>
+        </div>
+      )}
       {message && <p className="mt-3 text-sm text-red-700">{message}</p>}
     </Panel>
   )

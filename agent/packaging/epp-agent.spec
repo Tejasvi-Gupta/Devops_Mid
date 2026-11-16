@@ -16,13 +16,14 @@ from pathlib import Path
 block_cipher = None
 repo = Path(SPECPATH).resolve().parents[1]
 agent_src = repo / "agent" / "src"
+catalog_file = repo / "catalog" / "tools.json"
 
 a = Analysis(
     [str(agent_src / "epp_agent" / "__main__.py")],
     pathex=[str(agent_src)],
     binaries=[],
-    datas=[],
-    hiddenimports=["epp_agent", "epp_agent.commands", "epp_agent.credentials", "epp_agent.detect", "epp_agent.execute", "epp_agent.loop", "epp_agent.versions"],
+    datas=[(str(catalog_file), "catalog")],
+    hiddenimports=["epp_agent", "epp_agent.gui", "epp_agent.commands", "epp_agent.credentials", "epp_agent.detect", "epp_agent.execute", "epp_agent.loop", "epp_agent.versions", "tkinter", "tkinter.ttk", "tkinter.messagebox"],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

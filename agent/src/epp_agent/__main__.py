@@ -58,8 +58,14 @@ class ApiClient:
 
 
 def main() -> None:
+    # If launched by double-clicking without CLI arguments, open the GUI window
+    if len(sys.argv) <= 1:
+        from epp_agent.gui import main as gui_main
+        gui_main()
+        return
+
     parser = argparse.ArgumentParser(description="Environment provisioning Windows agent")
-    parser.add_argument("command", choices=["detect", "pair", "run"])
+    parser.add_argument("command", choices=["detect", "pair", "run", "gui"], nargs="?", default="gui")
     parser.add_argument("--server", default="http://localhost:8000")
     parser.add_argument("--code", default="")
     parser.add_argument("--name", default=os.environ.get("COMPUTERNAME", "Windows device"))
