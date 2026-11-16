@@ -45,7 +45,7 @@ def create_course(db: Session, user: User, name: str, description: str, class_co
 def list_courses(db: Session, user: User) -> list[Course]:
     if user.role == "admin":
         query = select(Course).order_by(Course.created_at.desc())
-    elif user.role == "instructor" and user.instructor_status == "approved":
+    elif user.role == "instructor":
         query = select(Course).where(Course.instructor_id == user.id).order_by(Course.created_at.desc())
     else:
         query = (
