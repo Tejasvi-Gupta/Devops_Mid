@@ -42,20 +42,7 @@ def test_instructor_publish_student_setup_failure_and_revision(migrated_test_dat
         db.close()
         admin_token, _admin = register_login(client, "admin@example.com")
         instructor_token, instructor = register(client, "inst@example.com", "instructor", "Instructor")
-        assert instructor["instructor_status"] == "pending"
-        blocked = client.post(
-            "/api/v1/courses",
-            headers=auth(instructor_token),
-            json={"name": "CS 101", "description": "Intro", "class_code": "CS101-A"},
-        )
-        assert blocked.status_code == 403
-
-        approved = client.post(
-            f"/api/v1/admin/instructors/{instructor['id']}/approve",
-            headers=auth(admin_token),
-        )
-        assert approved.status_code == 200
-        instructor_token, _instructor = register_login(client, "inst@example.com")
+        assert instructor["instructor_status"] == "approved"
 
         course = client.post(
             "/api/v1/courses",

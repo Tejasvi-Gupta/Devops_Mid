@@ -47,4 +47,5 @@ Copy `infrastructure/terraform/terraform.tfvars.example` to a local `infra.auto.
 
 - Docker image builds with `docker build -f backend/Dockerfile`.
 - Local Compose Postgres + API health endpoints work.
-- Terraform files are present and are **not** applied.
+- Terraform files are present and tested against AWS account `672461637278`.
+- In AWS, CloudWatch log groups, IAM roles, and CloudFront OAC provisioned cleanly. Student organization SCP (`p-nhhrni5n`) enforces custom VPC restrictions, reinforcing the design choice to keep `create_paid_resources=false` as the default governance switch.

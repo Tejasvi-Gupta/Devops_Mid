@@ -50,7 +50,7 @@ Honest status as of the local MVP. "Passed" means exercised with evidence in thi
 | Criterion | Status | Notes |
 |---|---|---|
 | Local setup documented | Passed | README + clean-machine guide |
-| Live cloud deployment | Passed | Live deployment verified on Render (`https://epp-api-7bhi.onrender.com`); containerized FastAPI + managed PostgreSQL running live with automated Alembic migrations |
+| Live cloud deployment | Passed | Live deployment verified on Render: Frontend SPA at `https://epp-app.onrender.com` + API at `https://epp-api-7bhi.onrender.com` + managed PostgreSQL database with automated migrations |
 | Migrations from clean DB | Passed | Alembic `0001_initial` |
 | Docker Compose services | Passed | Postgres and API containers healthy (`/api/v1/health/ready` verified); API image builds in CI job |
 | GitHub Actions workflow | Present | Unverified remote run |

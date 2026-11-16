@@ -2,6 +2,12 @@
 
 Instructors publish a course environment. Students pair a Windows agent, review the installation plan, and approve changes before anything is installed. Readiness comes from verification results stored by the API.
 
+## Live Cloud Deployment
+
+- **Frontend:** [https://epp-app.onrender.com](https://epp-app.onrender.com)
+- **API Health:** [https://epp-api-7bhi.onrender.com/api/v1/health/live](https://epp-api-7bhi.onrender.com/api/v1/health/live)
+- **Database:** Managed Cloud PostgreSQL with automated Alembic migrations on startup.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) for component and trust-boundary diagrams. Short version: React SPA → FastAPI → PostgreSQL; Windows agent polls outbound HTTPS and installs only catalog-matched winget packages after dashboard approval.

@@ -10,12 +10,12 @@ git init -b main
 
 # 2. Base scaffold commit - Vedansh (Member 1)
 git add catalog/ agent/ scripts/ docs/ .gitignore .env.example README.md
-git commit --author="Vedansh <vedansh.mugal25@gmail.com>" -m "feat(core): initial platform architecture, authz, and security model"
+git commit --author="Vedansh <vedansh.mudgal25@gmail.com>" -m "feat(core): initial platform architecture, authz, and security model"
 
 # 3. Backend core & state machine - Vedansh (Member 1)
 git checkout -b feature/backend-core
 git add backend/app/ backend/tests/
-git commit --author="Vedansh <vedansh.mugal25@gmail.com>" -m "feat(backend): add FastAPI platform routes, job lifecycle engine, and tests"
+git commit --author="Vedansh <vedansh.mudgal25@gmail.com>" -m "feat(backend): add FastAPI platform routes, job lifecycle engine, and tests"
 git checkout main
 git merge --no-ff feature/backend-core -m "Merge pull request #1 from feature/backend-core"
 
@@ -29,7 +29,7 @@ git merge --no-ff feature/docker-orchestration -m "Merge pull request #2 from fe
 # 5. Cloud Infrastructure as Code - Vedansh (Member 1)
 git checkout -b feature/terraform-aws-infra
 git add infrastructure/terraform/
-git commit --author="Vedansh <vedansh.mugal25@gmail.com>" -m "feat(terraform): configure VPC, RDS, ECS Fargate, and safe plan switch"
+git commit --author="Vedansh <vedansh.mudgal25@gmail.com>" -m "feat(terraform): configure VPC, RDS, ECS Fargate, and safe plan switch"
 git checkout main
 git merge --no-ff feature/terraform-aws-infra -m "Merge pull request #3 from feature/terraform-aws-infra"
 

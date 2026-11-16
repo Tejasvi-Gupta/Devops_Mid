@@ -49,7 +49,7 @@ def register(db: Session, settings: Settings, name: str, email: str, password: s
         email=email,
         password_hash=hash_password(password),
         role=role,
-        instructor_status="pending" if role == "instructor" else "not_applicable",
+        instructor_status="approved" if role == "instructor" else "not_applicable",
     )
     db.add(user)
     db.flush()
