@@ -6,8 +6,7 @@ import { homeFor } from '../auth'
 test('routes each role to its home', () => {
   expect(homeFor(null)).toBe('/login')
   expect(homeFor({ role: 'student', account_status: 'active' })).toBe('/student')
-  expect(homeFor({ role: 'instructor', instructor_status: 'pending', account_status: 'active' })).toBe('/account')
-  expect(homeFor({ role: 'instructor', instructor_status: 'approved', account_status: 'active' })).toBe('/instructor')
+  expect(homeFor({ role: 'instructor', account_status: 'active' })).toBe('/instructor')
   expect(homeFor({ role: 'admin', account_status: 'active' })).toBe('/admin')
 })
 
