@@ -146,7 +146,7 @@ class AgentGUI:
                     json={"code": code, "display_name": display_name, "platform": "windows"},
                     timeout=20,
                 )
-                if resp.status_code == 200:
+                if 200 <= resp.status_code < 300:
                     token = resp.json()["device_credential"]
                     self.store.save("device_credential", token)
                     self.store.save("server", server)
