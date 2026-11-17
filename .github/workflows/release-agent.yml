@@ -1,0 +1,50 @@
+name: Release Windows Agent
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install packaging dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller httpx
+
+      - name: Build agent executable
+        shell: pwsh
+        run: pyinstaller --clean --noconfirm --distpath agent\dist --workpath agent\build agent\packaging\epp-agent.spec
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: epp-agent-windows
+          path: agent/dist/epp-agent.exe
+          if-no-files-found: error
+
+      - name: Publish GitHub release asset
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release create "${{ github.ref_name }}" `
+            agent\dist\epp-agent.exe `
+            --title "${{ github.ref_name }}" `
+            --generate-notes

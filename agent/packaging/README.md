@@ -15,9 +15,21 @@ backend\.venv\Scripts\python.exe -m epp_agent run --server http://localhost:8000
 
 ```powershell
 backend\.venv\Scripts\python.exe -m pip install pyinstaller httpx
-backend\.venv\Scripts\pyinstaller.exe agent\packaging\epp-agent.spec
+backend\.venv\Scripts\pyinstaller.exe --distpath agent\dist --workpath agent\build agent\packaging\epp-agent.spec
 ```
 
 Output: `agent/dist/epp-agent.exe`. That build was not executed in this workspace.
+
+The GitHub Actions workflow in `.github/workflows/release-agent.yml` builds the
+same GUI-only executable on Windows. Push a version tag to build and publish it
+as a GitHub Release asset:
+
+```powershell
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Students should download the latest `epp-agent.exe` from the dashboard and
+double-click it. They do not need the repository, Python, or a terminal.
 
 Do not run `epp_agent run` or a packaged agent against your everyday Windows PC when a plan would install Python, Node, Git, or Docker. Use a disposable Windows virtual machine for real install verification.
