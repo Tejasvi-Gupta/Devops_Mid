@@ -1,7 +1,6 @@
 """Graphical user interface for student agent pairing and running."""
 
 import os
-import sys
 import threading
 import time
 import tkinter as tk
@@ -28,7 +27,7 @@ class AgentGUI:
         self.style = ttk.Style()
         try:
             self.style.theme_use("clam")
-        except Exception:
+        except tk.TclError:
             pass
 
         self.store = default_store()
@@ -154,9 +153,10 @@ class AgentGUI:
                     self.root.after(0, self._on_pair_success)
                 else:
                     msg = resp.json().get("error", {}).get("message", "Pairing failed")
-                    self.root.after(0, lambda: self._on_pair_error(msg))
-            except Exception as exc:
-                self.root.after(0, lambda: self._on_pair_error(str(exc)))
+                    self.root.after(0, lambda m=msg: self._on_pair_error(m))
+            except (httpx.HTTPError, OSError, ValueError) as exc:
+                err_text = str(exc)
+                self.root.after(0, lambda e=err_text: self._on_pair_error(e))
 
         threading.Thread(target=task, daemon=True).start()
 
@@ -200,14 +200,15 @@ class AgentGUI:
                     status = job.get("status")
                     self.root.after(0, lambda s=status: self._log(f"Job update: Status is '{s}'"))
                 time.sleep(3)
-            except Exception as exc:
-                self.root.after(0, lambda e=exc: self._log(f"Network polling notice: {e}"))
+            except (httpx.HTTPError, OSError, RuntimeError, ValueError) as exc:
+                err_text = str(exc)
+                self.root.after(0, lambda e=err_text: self._log(f"Network polling notice: {e}"))
                 time.sleep(10)
 
 
 def main() -> None:
     root = tk.Tk()
-    app = AgentGUI(root)
+    AgentGUI(root)
     root.mainloop()
 
 

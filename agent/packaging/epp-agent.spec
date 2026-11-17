@@ -4,7 +4,7 @@
 Build from the repository root on Windows after installing packaging deps:
 
   backend\\.venv\\Scripts\\python.exe -m pip install pyinstaller httpx
-  backend\\.venv\\Scripts\\pyinstaller.exe agent\\packaging\\epp-agent.spec
+  backend\\.venv\\Scripts\\pyinstaller.exe --distpath agent\\dist --workpath agent\\build agent\\packaging\\epp-agent.spec
 
 The built executable lands in agent/dist/epp-agent.exe. This workspace has not
 run that build. Prefer a disposable Windows VM for any smoke test that pairs
@@ -48,7 +48,7 @@ exe = EXE(
     upx=False,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
