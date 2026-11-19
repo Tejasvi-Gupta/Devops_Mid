@@ -65,6 +65,7 @@ Public registration cannot create an administrator. Approve instructors from the
 | [docs/aws-deployment.md](docs/aws-deployment.md) | AWS (not applied) |
 | [docs/acceptance.md](docs/acceptance.md) | Acceptance checklist |
 | [docs/limitations.md](docs/limitations.md) | Known gaps |
+| [docs/devops-principles-and-roles.md](docs/devops-principles-and-roles.md) | DevOps principles and team-role mapping |
 
 ## Tests
 
