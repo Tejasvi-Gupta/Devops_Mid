@@ -14,8 +14,6 @@ from app.services.common import audit, notify
 
 
 def _require_owner(course: Course, user: User) -> None:
-    if user.role == "admin":
-        return
     if course.instructor_id != user.id:
         raise forbidden("You do not manage this course")
 
@@ -43,9 +41,7 @@ def create_course(db: Session, user: User, name: str, description: str, class_co
 
 
 def list_courses(db: Session, user: User) -> list[Course]:
-    if user.role == "admin":
-        query = select(Course).order_by(Course.created_at.desc())
-    elif user.role == "instructor":
+    if user.role == "instructor":
         query = select(Course).where(Course.instructor_id == user.id).order_by(Course.created_at.desc())
     else:
         query = (
@@ -61,7 +57,7 @@ def get_course(db: Session, user: User, course_id: uuid.UUID) -> Course:
     course = course_by_id(db, course_id)
     if not course:
         raise not_found("Course not found")
-    if user.role == "admin" or course.instructor_id == user.id:
+    if course.instructor_id == user.id:
         return course
     if not active_enrollment(db, user.id, course.id):
         raise forbidden("You are not enrolled in this course")

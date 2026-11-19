@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { homeFor, useAuth } from './auth'
-import { AccessDenied, AccountPage, AdminHome, DevicePage, InstructorCourse, InstructorEnvironment, InstructorHome, JobPage, LoginPage, NotificationsPage, RegisterPage, StudentEnvironment, StudentHome } from './screens'
+import { AccessDenied, AccountPage, DevicePage, InstructorCourse, InstructorEnvironment, InstructorHome, JobPage, LoginPage, NotificationsPage, RegisterPage, StudentEnvironment, StudentHome } from './screens'
 import { Shell } from './ui'
 
 function Guard({ children, allow }) {
@@ -29,7 +29,6 @@ export default function App() {
         <Route path="/instructor" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorHome /></Guard>} />
         <Route path="/instructor/courses/:id" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorCourse /></Guard>} />
         <Route path="/instructor/environments/:id" element={<Guard allow={(user) => user.role === 'instructor'}><InstructorEnvironment /></Guard>} />
-        <Route path="/admin" element={<Guard allow={(user) => user.role === 'admin'}><AdminHome /></Guard>} />
         <Route path="*" element={<Navigate to={user ? homeFor(user) : '/login'} replace />} />
       </Routes>
     </Shell>

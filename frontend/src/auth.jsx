@@ -6,7 +6,6 @@ const AuthContext = createContext(null)
 export function homeFor(user) {
   if (!user) return '/login'
   if (user.account_status !== 'active') return '/access-denied'
-  if (user.role === 'admin') return '/admin'
   if (user.role === 'instructor') return '/instructor'
   return '/student'
 }

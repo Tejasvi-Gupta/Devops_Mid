@@ -59,7 +59,7 @@ The image lists these project roles:
 4. **Backend & Security**
 
 These are engineering responsibilities, not application user roles. The
-application user roles are Student, Instructor, and Administrator; they are
+application user roles are Student and Instructor; they are
 defined in [architecture.md](architecture.md).
 
 ## 4. Role-to-project mapping
@@ -154,7 +154,7 @@ shared limiter when running multiple ECS tasks.
 | Category | Roles | Meaning |
 |---|---|---|
 | Engineering/team roles from the PNG | CI/CD Engineer, Container Engineer, Cloud/Infra Engineer, Backend & Security | Responsibilities for building and operating the platform |
-| Application roles | Student, Instructor, Administrator | Permissions and workflows inside the platform |
+| Application roles | Student, Instructor | Permissions and workflows inside the platform |
 
 The four engineering roles overlap in a small team. One person can perform
 more than one role, but the responsibilities remain distinct for planning,
@@ -165,8 +165,8 @@ implementation, review, and presentation.
 > This project applies DevOps through version-controlled development,
 > automated CI, continuous testing, Docker-based delivery, Terraform
 > infrastructure-as-code, automated Windows-agent releases, and
-> security-integrated backend design. The project includes all four roles
-> shown in the image. CI/CD and backend/security are implemented most fully;
+> security-integrated backend design. The application has two role-based
+> access roles: Student and Instructor. CI/CD and backend/security are implemented most fully;
 > container engineering is implemented for local and CI environments; and
 > cloud/infra is implemented as validated Terraform configuration with
 > production provisioning and some service wiring still pending.

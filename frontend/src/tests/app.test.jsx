@@ -7,7 +7,6 @@ test('routes each role to its home', () => {
   expect(homeFor(null)).toBe('/login')
   expect(homeFor({ role: 'student', account_status: 'active' })).toBe('/student')
   expect(homeFor({ role: 'instructor', account_status: 'active' })).toBe('/instructor')
-  expect(homeFor({ role: 'admin', account_status: 'active' })).toBe('/admin')
 })
 
 test('shows a plan before installation', () => {

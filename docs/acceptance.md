@@ -6,8 +6,7 @@ Honest status as of the local MVP. "Passed" means exercised with evidence in thi
 
 | Criterion | Status | Evidence / blocker |
 |---|---|---|
-| Student, instructor, admin workflows | Passed (local UI/API) | Registration, approval, course publish, student view |
-| Instructor approval enforced | Passed | Pending instructor cannot manage courses |
+| Student and instructor workflows | Passed (local UI/API) | Registration, course publish, student view |
 | Courses, enrollments, revisions in PostgreSQL | Passed | Local `epp` database rows observed |
 | Published revisions immutable | Passed | Integration journey expects 409 on mutation |
 | Four tool adapters documented and implemented | Passed (code + docs) | Real winget installs not run on this PC |

@@ -15,7 +15,6 @@ function useLoad(loader, deps = []) {
   }, [...deps, tick])
   return { data, error, reload: () => setTick((value) => value + 1) }
 }
-
 export function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -40,7 +39,6 @@ export function LoginPage() {
     </Panel>
   )
 }
-
 export function RegisterPage() {
   const { register } = useAuth()
   const navigate = useNavigate()
@@ -75,7 +73,6 @@ export function RegisterPage() {
     </Panel>
   )
 }
-
 export function AccountPage() {
   const { user } = useAuth()
   return (
@@ -83,8 +80,6 @@ export function AccountPage() {
       <p>{user?.name}</p>
       <p className="text-sm text-stone-600">{user?.email}</p>
       <p className="mt-3">Role: {user?.role}</p>
-      {user?.role === 'instructor' && user.instructor_status === 'pending' && <p className="mt-3">An administrator still needs to approve instructor access.</p>}
-      {user?.instructor_status === 'rejected' && <p className="mt-3">Instructor access was rejected. You can keep using a student account.</p>}
     </Panel>
   )
 }
@@ -572,46 +567,5 @@ export function InstructorEnvironment() {
       </div>
       {message && <p className="mt-3 text-sm text-pine dark:text-pine">{message}</p>}
     </Panel>
-  )
-}
-
-export function AdminHome() {
-  const { data, error, reload } = useLoad(async () => ({
-    pending: await api('/admin/instructor-requests'),
-    users: await api('/admin/users'),
-    audit: await api('/admin/audit'),
-    health: await api('/health/ready'),
-  }))
-  if (error) return <p>{error}</p>
-  if (!data) return <p>Loading administration…</p>
-  return (
-    <div className="space-y-6">
-      <Panel title="Platform"><p>API {data.health.status} · {data.health.environment}</p></Panel>
-      <Panel title="Instructor approval">
-        {!data.pending.length && <p>No pending instructor requests.</p>}
-        {data.pending.map((user) => (
-          <div key={user.id} className="flex items-center justify-between py-2">
-            <span>{user.name} · {user.email}</span>
-            <span className="flex gap-2">
-              <button type="button" onClick={async () => { await api(`/admin/instructors/${user.id}/approve`, { method: 'POST' }); reload() }}>Approve</button>
-              <button type="button" onClick={async () => { await api(`/admin/instructors/${user.id}/reject`, { method: 'POST' }); reload() }}>Reject</button>
-            </span>
-          </div>
-        ))}
-      </Panel>
-      <Panel title="Users">
-        {data.users.items.map((user) => (
-          <div key={user.id} className="flex items-center justify-between py-2 text-sm">
-            <span>{user.name} · {user.role} · {user.account_status}</span>
-            {user.account_status === 'active'
-              ? <button type="button" onClick={async () => { await api(`/admin/users/${user.id}/suspend`, { method: 'POST' }); reload() }}>Suspend</button>
-              : <button type="button" onClick={async () => { await api(`/admin/users/${user.id}/reactivate`, { method: 'POST' }); reload() }}>Reactivate</button>}
-          </div>
-        ))}
-      </Panel>
-      <Panel title="Audit">
-        <ul className="space-y-1 text-sm font-mono">{data.audit.items.slice(0, 20).map((item) => <li key={item.id}>{item.action} · {item.outcome}</li>)}</ul>
-      </Panel>
-    </div>
   )
 }

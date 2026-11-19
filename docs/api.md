@@ -21,6 +21,6 @@ Courses, enrollments, environments, revisions, publish, jobs, devices, pairing c
 
 Unauthenticated pairing: `POST /devices/pair`. Authenticated device routes under `/agent/*` use the device bearer token.
 
-## Admin
-
-Instructor approve/reject, user suspend/reactivate, audit, and health: `backend/app/api/v1/admin.py`. Health: `GET /api/v1/health/live`, `GET /api/v1/health/ready`.
+## Health
+Health endpoints are available at `GET /api/v1/health/live` and
+`GET /api/v1/health/ready`.

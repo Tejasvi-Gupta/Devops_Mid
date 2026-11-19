@@ -17,7 +17,7 @@
 | Stolen refresh cookie | HttpOnly, path-scoped, CSRF on refresh, reuse revocation | XSS in the SPA can still call APIs while the session is live |
 | Pairing code interception | Short TTL, hashed at rest, single-use, rate limit | Shoulder-surfing during the five-minute window |
 | Malicious install payload from API | Agent ignores remote URL/hash/shell; local catalog pin required | Compromised local catalog file on the student machine |
-| Instructor privilege before approval | `instructor_status` checked on every instructor route | Mis-approved instructors inherit full course powers |
+| Unauthorized instructor access | Instructor ownership checked on every course and environment route | A compromised instructor account can manage its own courses |
 | Auth brute force | In-process rate limit | Limit is per process; multi-task ECS needs a shared limiter |
 | Install on developer PC during tests | Agent test mode; documented VM requirement | Operator can still approve a plan on a real machine |
 

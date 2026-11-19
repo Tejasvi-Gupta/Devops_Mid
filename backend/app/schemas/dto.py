@@ -17,7 +17,6 @@ class UserPublic(BaseModel):
     email: EmailStr
     role: str
     account_status: str
-    instructor_status: str
 
 
 class RegisterIn(BaseModel):
@@ -227,10 +226,6 @@ class AgentEventIn(BaseModel):
     tool: str | None = None
     message: str = Field(default="", max_length=500)
     details: dict = Field(default_factory=dict)
-
-
-class RoleIn(BaseModel):
-    role: Literal["student", "instructor", "admin"]
 
 
 class PageOut(BaseModel):

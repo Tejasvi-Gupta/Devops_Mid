@@ -41,15 +41,8 @@ npm run dev
 
 Open http://localhost:5173. The Vite dev server proxies `/api` to the API, so the refresh cookie stays on the same origin.
 
-Create the first administrator from the repository root:
-
-```powershell
-$env:BOOTSTRAP_ADMIN_EMAIL = "admin@school.edu"
-$env:BOOTSTRAP_ADMIN_PASSWORD = "a-long-password-1"
-backend\.venv\Scripts\python.exe scripts\create_admin.py
-```
-
-Public registration cannot create an administrator. Approve instructors from the admin UI.
+Public registration supports two roles: Student and Instructor. Instructor
+accounts are active immediately; no administrator approval is required.
 
 ## Documentation
 
@@ -115,7 +108,7 @@ npm and the Docker engine are verify-only. Exact npm pins are rejected at publis
 
 ## What was verified here
 
-- API health, registration, instructor approval, course publish, student assignment, and device pairing against local PostgreSQL.
+- API health, registration, course publish, student assignment, and device pairing against local PostgreSQL.
 - Backend journey test covering failed install, retry, and a new published revision (against `epp_test`, with installer mocked).
 - Agent allowlisting and detection parsing. No winget install was executed on this PC.
 - Frontend production build. Frontend unit tests should be re-run after the Vitest pool fix.

@@ -39,15 +39,10 @@ npm run dev
 
 Open http://localhost:5173.
 
-## 5. First administrator
+## 5. Accounts
 
-```powershell
-$env:BOOTSTRAP_ADMIN_EMAIL = "admin@school.edu"
-$env:BOOTSTRAP_ADMIN_PASSWORD = "a-long-password-1"
-backend\.venv\Scripts\python.exe scripts\create_admin.py
-```
-
-Sign in as the admin, approve instructor requests, then use instructor and student accounts for the course journey.
+Register either a student or instructor account from the application. Both
+roles are active immediately; the platform has no administrator approval step.
 
 ## 6. Smoke path without installing software
 

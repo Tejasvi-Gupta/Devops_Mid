@@ -36,12 +36,6 @@ def current_instructor(user: User = Depends(current_user)) -> User:
     return user
 
 
-def current_admin(user: User = Depends(current_user)) -> User:
-    if user.role != "admin":
-        raise forbidden("Administrator access is required")
-    return user
-
-
 def current_device(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
     db: Session = Depends(get_db),

@@ -31,12 +31,8 @@ def _uuid() -> uuid.UUID:
 class User(Base):
     __tablename__ = "users"
     __table_args__ = (
-        CheckConstraint("role in ('student', 'instructor', 'admin')", name="ck_users_role"),
+        CheckConstraint("role in ('student', 'instructor')", name="ck_users_role"),
         CheckConstraint("account_status in ('active', 'suspended')", name="ck_users_account_status"),
-        CheckConstraint(
-            "instructor_status in ('not_applicable', 'pending', 'approved', 'rejected')",
-            name="ck_users_instructor_status",
-        ),
         CheckConstraint("email = lower(email)", name="ck_users_email_lower"),
     )
 
@@ -47,7 +43,6 @@ class User(Base):
     google_sub: Mapped[str | None] = mapped_column(String(255), unique=True)
     role: Mapped[str] = mapped_column(String(32), nullable=False, default="student")
     account_status: Mapped[str] = mapped_column(String(32), nullable=False, default="active")
-    instructor_status: Mapped[str] = mapped_column(String(32), nullable=False, default="not_applicable")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 

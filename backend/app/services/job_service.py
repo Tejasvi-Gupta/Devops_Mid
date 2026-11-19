@@ -133,12 +133,12 @@ def _load_authorized(db: Session, user: User, job_id: uuid.UUID) -> Installation
     job = job_by_id(db, job_id)
     if not job:
         raise not_found("Job not found")
-    if user.role == "admin" or job.student_id == user.id:
+    if job.student_id == user.id:
         return job
     revision = db.get(EnvironmentRevision, job.revision_id)
     environment = environment_by_id(db, revision.environment_id) if revision else None
     course = db.get(Course, environment.course_id) if environment else None
-    if course and course.instructor_id == user.id and user.instructor_status == "approved":
+    if course and course.instructor_id == user.id:
         return job
     raise forbidden("You cannot view this job")
 
@@ -225,7 +225,7 @@ def approve(db: Session, user: User, job_id: uuid.UUID, acknowledgements: list[s
 
 def cancel(db: Session, user: User, job_id: uuid.UUID) -> InstallationJob:
     job = _load_authorized(db, user, job_id)
-    if job.student_id != user.id and user.role != "admin":
+    if job.student_id != user.id:
         raise forbidden("You cannot cancel this job")
     if job.status in TERMINAL_STATUSES:
         raise invalid_state("This job has already finished")
@@ -546,7 +546,7 @@ def preview_plan(db: Session, settings: Settings, user: User, environment_id: uu
     if not environment:
         raise not_found("Environment not found")
     course = db.get(Course, environment.course_id)
-    allowed = user.role == "admin" or (course and course.instructor_id == user.id)
+    allowed = course and course.instructor_id == user.id
     if not allowed and not active_enrollment(db, user.id, environment.course_id):
         raise forbidden("You cannot preview this environment")
     revision = _published_revision(db, environment)

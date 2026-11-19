@@ -28,9 +28,6 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     aws_region: str = ""
     catalog_path: str = ""
-    bootstrap_admin_email: str = ""
-    bootstrap_admin_password: str = ""
-    bootstrap_admin_name: str = "Platform Admin"
     auth_rate_limit: int = 10
     auth_rate_window_seconds: int = 600
     pairing_rate_limit: int = 5

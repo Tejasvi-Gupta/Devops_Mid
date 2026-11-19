@@ -86,10 +86,7 @@ def pair_device(db: Session, code: str, display_name: str, platform: str) -> tup
 
 
 def list_devices(db: Session, user: User) -> list[AgentDevice]:
-    if user.role == "admin":
-        query = select(AgentDevice).order_by(AgentDevice.registered_at.desc())
-    else:
-        query = select(AgentDevice).where(AgentDevice.student_id == user.id).order_by(AgentDevice.registered_at.desc())
+    query = select(AgentDevice).where(AgentDevice.student_id == user.id).order_by(AgentDevice.registered_at.desc())
     return list(db.scalars(query))
 
 
@@ -97,7 +94,7 @@ def revoke_device(db: Session, user: User, device_id: uuid.UUID) -> AgentDevice:
     device = device_by_id(db, device_id)
     if not device:
         raise not_found("Device not found")
-    if user.role != "admin" and device.student_id != user.id:
+    if device.student_id != user.id:
         raise forbidden("You cannot revoke this device")
     if device.status == "revoked":
         return device

@@ -6,7 +6,6 @@
 flowchart LR
   Student[Student browser] --> FE[React frontend]
   Instructor[Instructor browser] --> FE
-  Admin[Admin browser] --> FE
   FE -->|same-origin /api| API[FastAPI]
   API --> DB[(PostgreSQL)]
   Agent[Windows agent] -->|outbound HTTPS poll| API
@@ -20,8 +19,7 @@ The cloud never pushes shell commands to the student machine. The agent polls fo
 | Role | How created | Capabilities |
 |---|---|---|
 | Student | Public registration | Pair one device, start jobs, approve plans, view readiness |
-| Instructor | Public registration with `role=instructor`, then admin approval | Own courses, enroll students, publish environment revisions |
-| Administrator | `scripts/create_admin.py` only | Approve instructors, suspend users, view audit and health |
+| Instructor | Public registration with `role=instructor` | Own courses, enroll students, publish environment revisions |
 
 ## Data model (core)
 

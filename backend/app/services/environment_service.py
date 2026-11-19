@@ -27,7 +27,7 @@ def _owner_course(db: Session, user: User, course_id: uuid.UUID) -> Course:
     course = course_by_id(db, course_id)
     if not course:
         raise not_found("Course not found")
-    if user.role != "admin" and course.instructor_id != user.id:
+    if course.instructor_id != user.id:
         raise forbidden("You do not manage this course")
     return course
 
@@ -79,7 +79,7 @@ def _visible(db: Session, user: User, environment: Environment) -> None:
     course = course_by_id(db, environment.course_id)
     if not course:
         raise not_found("Environment not found")
-    if user.role == "admin" or course.instructor_id == user.id:
+    if course.instructor_id == user.id:
         return
     if not active_enrollment(db, user.id, course.id):
         raise forbidden("You are not enrolled in this course")
@@ -242,6 +242,6 @@ def list_for_course(db: Session, user: User, course_id: uuid.UUID) -> list[Envir
     course = course_by_id(db, course_id)
     if not course:
         raise not_found("Course not found")
-    if user.role != "admin" and course.instructor_id != user.id and not active_enrollment(db, user.id, course.id):
+    if course.instructor_id != user.id and not active_enrollment(db, user.id, course.id):
         raise forbidden("You do not have access to this course")
     return list(db.scalars(select(Environment).where(Environment.course_id == course.id).order_by(Environment.name)))

@@ -1,9 +1,6 @@
 import uuid
 
-from app.core.security import hash_password
-from app.db.session import SessionLocal
 from app.main import app
-from app.models import User
 from fastapi.testclient import TestClient
 
 REQUIREMENTS = [
@@ -28,21 +25,7 @@ def register(client, email, role="student", name="Test User"):
 
 def test_instructor_publish_student_setup_failure_and_revision(migrated_test_database):
     with TestClient(app) as client:
-        db = SessionLocal()
-        db.add(
-            User(
-                name="Platform Admin",
-                email="admin@example.com",
-                password_hash=hash_password("correct-horse-1"),
-                role="admin",
-                instructor_status="not_applicable",
-            )
-        )
-        db.commit()
-        db.close()
-        admin_token, _admin = register_login(client, "admin@example.com")
         instructor_token, instructor = register(client, "inst@example.com", "instructor", "Instructor")
-        assert instructor["instructor_status"] == "approved"
 
         course = client.post(
             "/api/v1/courses",
@@ -192,10 +175,3 @@ def test_instructor_publish_student_setup_failure_and_revision(migrated_test_dat
         notes = client.get("/api/v1/notifications", headers=auth(student_token)).json()
         assert any(item["type"] == "revision_published" for item in notes["items"])
         del student
-
-
-def register_login(client, email):
-    response = client.post("/api/v1/auth/login", json={"email": email, "password": "correct-horse-1"})
-    assert response.status_code == 200, response.text
-    body = response.json()
-    return body["access_token"], body["user"]

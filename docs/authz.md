@@ -12,17 +12,15 @@
 ## Registration rules
 
 - Public registration may create `student` or `instructor` only.
-- Instructor accounts start with `instructor_status=pending` and cannot manage courses until an administrator approves them.
-- Rejected instructors are demoted to `student`.
-- Administrators are never created through the public API.
+- Instructor accounts are active immediately and can manage their own courses.
+- There is no administrator role or administrator approval workflow.
 
 ## Authorization checks
 
 | Surface | Guard |
 |---|---|
-| Instructor course and environment mutations | `role=instructor` and `instructor_status=approved`, plus ownership |
+| Instructor course and environment mutations | `role=instructor`, plus ownership |
 | Student jobs, devices, enrollments | Authenticated student and resource ownership |
-| Admin approval, suspend, audit | `role=admin` |
 | Agent work, detection, verification | Device bearer credential that is not a JWT shape |
 
 Sensitive operations write audit log rows. Auth and pairing endpoints are rate limited in-process (10 auth attempts / 600s, 5 pairing attempts / 600s per key). Multi-instance production should replace the in-process limiter with a shared store.
