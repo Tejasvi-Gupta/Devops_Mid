@@ -1,16 +1,22 @@
-# React + Vite
+# LabGrid frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+LabGrid is the React/Vite web interface for the Environment Provisioning Platform. It provides separate, responsive workspaces for students and instructors while keeping provisioning approvals and device trust visible.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+From this directory:
 
-## React Compiler
+```powershell
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The interface uses the existing `/api` proxy and backend contracts. Validate changes with:
 
-## Expanding the Oxlint configuration
+```powershell
+npm run lint
+npm test
+npm run build
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The visual system is defined in `src/index.css` and shared layout/status primitives live in `src/ui.jsx`. Keep new screens role-aware, keyboard accessible, and explicit about loading, empty, error, and destructive states.

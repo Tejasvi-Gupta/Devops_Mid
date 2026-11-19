@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from './auth'
 
 const LABELS = {
@@ -21,83 +21,100 @@ const LABELS = {
   active: 'Active',
   suspended: 'Suspended',
   revoked: 'Revoked',
+  draft: 'Draft',
+  published: 'Published',
+}
+
+const STATUS_TONES = {
+  ready: 'success',
+  completed: 'success',
+  published: 'success',
+  failed: 'danger',
+  cancelled: 'danger',
+  revoked: 'danger',
+  needs_attention: 'warning',
+  needs_update: 'warning',
+  installing: 'info',
+  verifying: 'info',
+  in_progress: 'info',
+  awaiting_approval: 'warning',
 }
 
 export function StatusPill({ value }) {
-  const tone = {
-    ready: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200',
-    completed: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200',
-    failed: 'bg-red-100 text-red-900 dark:bg-red-950 dark:text-red-200',
-    needs_attention: 'bg-amber-100 text-amber-950 dark:bg-amber-950 dark:text-amber-100',
-    needs_update: 'bg-amber-100 text-amber-950 dark:bg-amber-950 dark:text-amber-100',
-    installing: 'bg-sky-100 text-sky-950 dark:bg-sky-950 dark:text-sky-100',
-  }[value] || 'bg-stone-200 text-stone-800 dark:bg-stone-800 dark:text-stone-100'
-  return <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}>{LABELS[value] || value}</span>
+  const tone = STATUS_TONES[value] || 'neutral'
+  return <span className={`status-pill status-${tone}`}><span aria-hidden="true" className="status-dot" />{LABELS[value] || value}</span>
+}
+
+export function Alert({ tone = 'danger', children }) {
+  return <div className={`alert alert-${tone}`} role={tone === 'danger' ? 'alert' : 'status'}>{children}</div>
+}
+
+export function LoadingState({ label = 'Loading' }) {
+  return <div className="loading-state" role="status"><span className="spinner" aria-hidden="true" />{label}…</div>
+}
+
+export function EmptyState({ title, children, action }) {
+  return <div className="empty-state"><div className="empty-icon" aria-hidden="true">⌁</div><h3>{title}</h3>{children && <p>{children}</p>}{action}</div>
 }
 
 export function Shell({ children }) {
   const { user, logout } = useAuth()
-  const links = user?.role === 'admin'
-    ? [['/admin', 'Admin'], ['/notifications', 'Notifications'], ['/account', 'Account']]
-    : user?.role === 'instructor'
-      ? [['/instructor', 'Courses'], ['/notifications', 'Notifications'], ['/account', 'Account']]
-      : [['/student', 'Environments'], ['/student/device', 'Device'], ['/notifications', 'Notifications'], ['/account', 'Account']]
+  const location = useLocation()
+  const links = user?.role === 'instructor'
+    ? [['/instructor', 'Courses', '▦'], ['/notifications', 'Notifications', '◌'], ['/account', 'Account', '○']]
+    : [['/student', 'Environments', '▦'], ['/student/device', 'Device', '⌁'], ['/notifications', 'Notifications', '◌'], ['/account', 'Account', '○']]
+
   return (
-    <div className="min-h-screen bg-paper text-ink dark:bg-zinc-950 dark:text-stone-100">
-      <header className="border-b border-stone-300 dark:border-zinc-800">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-          <Link to={user ? links[0][0] : '/login'} className="font-medium tracking-tight">Provision</Link>
-          <nav className="flex flex-wrap items-center gap-4 text-sm">
-            {user && links.map(([href, label]) => <Link key={href} to={href}>{label}</Link>)}
-            <button type="button" className="rounded border border-stone-400 px-2 py-1 dark:border-zinc-600" onClick={() => {
-              const next = document.documentElement.classList.toggle('dark')
-              localStorage.setItem('epp-theme', next ? 'dark' : 'light')
-            }}>Theme</button>
-            {user && <button type="button" onClick={logout}>Sign out</button>}
-          </nav>
+    <div className="app-shell">
+      {user && <aside className="sidebar">
+        <Link to={links[0][0]} className="brand"><span className="brand-mark">L</span><span>Lab<span>Grid</span></span></Link>
+        <div className="sidebar-label">{user.role === 'instructor' ? 'Instructor workspace' : 'Student workspace'}</div>
+        <nav className="side-nav" aria-label="Primary navigation">
+          {links.map(([href, label, icon]) => <Link className={location.pathname === href || (href !== links[0][0] && location.pathname.startsWith(href)) ? 'nav-link active' : 'nav-link'} key={href} to={href}><span aria-hidden="true">{icon}</span>{label}</Link>)}
+        </nav>
+        <div className="sidebar-footer">
+          <div className="profile-mini"><span className="avatar">{user.name?.slice(0, 1).toUpperCase()}</span><span><strong>{user.name}</strong><small>{user.role}</small></span></div>
+          <button type="button" className="sign-out" onClick={logout}>Sign out</button>
         </div>
-      </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      </aside>}
+      <div className={user ? 'app-content has-sidebar' : 'app-content'}>
+        {!user && <header className="public-header"><Link to="/login" className="brand"><span className="brand-mark">L</span><span>Lab<span>Grid</span></span></Link></header>}
+        {user && <header className="mobile-header"><Link to={links[0][0]} className="brand"><span className="brand-mark">L</span><span>Lab<span>Grid</span></span></Link><nav className="mobile-nav" aria-label="Mobile navigation">{links.slice(0, 3).map(([href, label]) => <Link key={href} className={location.pathname.startsWith(href) ? 'active' : ''} to={href}>{label}</Link>)}</nav><button type="button" className="mobile-sign-out" onClick={logout}>Sign out</button></header>}
+        <main className="page-container">{children}</main>
+      </div>
     </div>
   )
 }
 
-export function Panel({ title, children, action }) {
-  return (
-    <section className="rounded-lg border border-stone-300 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-lg font-medium">{title}</h2>
-        {action}
-      </div>
-      {children}
-    </section>
-  )
+export function PageHeader({ eyebrow, title, description, action }) {
+  return <div className="page-header"><div>{eyebrow && <div className="eyebrow">{eyebrow}</div>}<h1>{title}</h1>{description && <p>{description}</p>}</div>{action && <div className="page-header-action">{action}</div>}</div>
 }
 
-export function Field({ label, children }) {
-  return <label className="block text-sm"><span className="mb-1 block text-stone-600 dark:text-stone-300">{label}</span>{children}</label>
+export function Panel({ title, children, action, className = '' }) {
+  return <section className={`panel ${className}`}><div className="panel-heading"><h2>{title}</h2>{action}</div>{children}</section>
 }
 
-export const inputClass = 'w-full rounded border border-stone-300 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-950'
+export function Field({ label, children, hint }) {
+  return <label className="field"><span className="field-label">{label}</span>{children}{hint && <span className="field-hint">{hint}</span>}</label>
+}
+
+export const inputClass = 'form-control'
 
 export function PlanPreview({ plan }) {
-  if (!plan) return <p>The agent has not reported a plan yet.</p>
+  if (!plan) return <EmptyState title="Plan is being prepared">The agent has not reported an installation plan yet.</EmptyState>
   return (
-    <div className="space-y-3">
-      {plan.uncertainties?.length > 0 && <p className="text-sm text-clay">{plan.uncertainties.join(' ')}</p>}
-      <ul className="space-y-3">
+    <div className="plan-preview">
+      {plan.uncertainties?.length > 0 && <Alert tone="warning">{plan.uncertainties.join(' ')}</Alert>}
+      <div className="plan-list">
         {(plan.actions || []).map((action) => (
-          <li key={action.id} className="rounded border border-stone-200 p-3 dark:border-zinc-700">
-            <div className="flex items-center justify-between gap-3">
-              <strong className="font-mono text-sm">{action.tool}</strong>
-              <StatusPill value={action.operation} />
-            </div>
-            <p className="mt-2 text-sm">{action.reason}</p>
-            <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{action.impact}</p>
-            {action.version && <p className="mt-1 font-mono text-xs">Target {action.version}</p>}
-          </li>
+          <article key={action.id} className="plan-item">
+            <div className="plan-item-top"><strong>{action.tool}</strong><StatusPill value={action.operation} /></div>
+            <p>{action.reason}</p>
+            <span>{action.impact}</span>
+            {action.version && <code>Target {action.version}</code>}
+          </article>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
